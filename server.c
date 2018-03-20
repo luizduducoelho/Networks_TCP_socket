@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <string.h>
 
 int main(){
 	
@@ -16,7 +17,7 @@ int main(){
 	struct sockaddr_in server_address;
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(9002);
-	server_address.sin_addr.s_addr = INADDR_ANY;
+	server_address.sin_addr.s_addr = inet_addr("0.0.0.0"); // INADDR_ANY; 
 	
 	// Bind 
 	bind(server_socket, (struct sockaddr *) &server_address, sizeof(server_address));
@@ -28,6 +29,11 @@ int main(){
 
 	// Accept
 	client_socket = accept(server_socket, NULL, NULL);
+	
+	// Receive request
+	char client_request[256];
+	recv(client_socket, &client_request, sizeof(client_request), 0);
+	printf("Received request from client: %s\n", client_request);
 	
 	// Send data
 	send(client_socket, server_message, sizeof(server_message), 0);

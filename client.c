@@ -23,7 +23,7 @@ int main(int argc, char **argv){
 	int porta_do_servidor;
 	char *nome_do_arquivo = calloc(filename_len, sizeof (*nome_do_arquivo));
 	int tam_buffer;
-	
+
 	//memset (nome_do_servidor, 0, host_len);
 	if (!nome_do_servidor) {    /* validate memory created successfully or throw error */
 		fprintf (stderr, "error: virtual memory exhausted allocating 'nome_do_servidor'\n");
@@ -35,7 +35,7 @@ int main(int argc, char **argv){
 		fprintf (stderr, "error: virtual memory exhausted allocating 'nome_do_arquivo'\n");
 		return 1;
     	}
-	strncpy (nome_do_arquivo, argv[3], host_len);
+	strncpy (nome_do_arquivo, argv[3], filename_len);
 	
 	porta_do_servidor = atoi(argv[2]);
 	tam_buffer = atoi(argv[4]);
@@ -45,16 +45,22 @@ int main(int argc, char **argv){
 	printf("Nome do arquivo: %s\n", nome_do_arquivo);
 	printf("Tamanho do buffer: %d\n", tam_buffer);
 	
+	// Create buffer
+	char buff[1024];
 
 	// Create socket
 	int network_socket;
 	network_socket = socket(AF_INET, SOCK_STREAM, 0); // 0 is default, TCP
+	if (network_socket < 0) {
+	printf("Failed to create socket");
+	return 1;
+	}
 	
 	// Get address
 	struct sockaddr_in server_address;
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(porta_do_servidor); // Port number
-	server_address.sin_addr.s_addr = INADDR_ANY;
+	server_address.sin_addr.s_addr = inet_addr("0.0.0.0"); // INADDR_ANY; 
 	
 	// Connet
 	int connection_status = connect(network_socket, (struct sockaddr *) &server_address, sizeof(server_address));	
@@ -62,6 +68,10 @@ int main(int argc, char **argv){
 		printf("Error in connection \n");
 	}
 	
+	// Send request
+	send(network_socket, nome_do_arquivo, filename_len, 0);	
+	printf("Sent request to server\n");
+
 	// Receive
 	char server_response[256];
 	recv(network_socket, &server_response, sizeof(server_response), 0);
@@ -74,6 +84,7 @@ int main(int argc, char **argv){
 
 	//Free pointers
 	free(nome_do_servidor);
+	free(nome_do_arquivo);
 	
 	return 0;
 }
