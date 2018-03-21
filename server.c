@@ -35,11 +35,47 @@ int main(){
 	recv(client_socket, &client_request, sizeof(client_request), 0);
 	printf("Received request from client: %s\n", client_request);
 	
+	//Read file
+	FILE *arq;
+	arq = fopen("arquivo.txt", "r");
+	if (arq == NULL){
+		printf("Erro na abertura do arquivo");
+		exit(1);
+	}
+	int total_lido;
+	int tam_buffer = 5; //TEMPORARIO, OBTER DA LINHA DE COMANDO  !!!!!!!!!
+	char buffer[tam_buffer];
+	//total_lido = fread(buffer, 1, tam_buffer, arq);
+	/*while (fread(buffer, 1, tam_buffer, arq) == 5){
+		printf("Buffer read 0: %c\n", buffer[0]);
+		printf("Buffer read 1: %c\n", buffer[1]);
+		printf("Buffer read 2: %c\n", buffer[2]);
+		printf("Buffer read 3: %c\n", buffer[3]);
+		printf("Buffer read 4: %c\n", buffer[4]);
+		send(client_socket, buffer, tam_buffer, 0);
+	}*/
+	do {	
+		total_lido = fread(buffer, 1, tam_buffer, arq);
+		printf("Buffer read 0: %c\n", buffer[0]);
+		printf("Buffer read 1: %c\n", buffer[1]);
+		printf("Buffer read 2: %c\n", buffer[2]);
+		printf("Buffer read 3: %c\n", buffer[3]);
+		printf("Buffer read 4: %c\n", buffer[4]);
+		send(client_socket, buffer, total_lido, 0);
+		printf("Enviado: %d \n", total_lido);
+		memset(buffer, 0, tam_buffer );
+	} while(total_lido != 0);
+	//send(client_socket, buffer, tam_buffer, 0);
+	
+	
 	// Send data
-	send(client_socket, server_message, sizeof(server_message), 0);
+	//send(client_socket, server_message, sizeof(server_message), 0);
 	
 	// Close socket 
 	close(server_socket);
+	
+	// Close file
+	fclose(arq);
 
 	return 0;
 }

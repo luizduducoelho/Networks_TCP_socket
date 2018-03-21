@@ -71,18 +71,58 @@ int main(int argc, char **argv){
 	// Send request
 	send(network_socket, nome_do_arquivo, filename_len, 0);	
 	printf("Sent request to server\n");
+	
+	// Open file
+	FILE *arq;
+	arq = fopen("Client_made.txt", "w+");
+	if (arq == NULL){
+		printf("Problemas na criacao do arquivo");
+		exit(1);	
+	}
+	int total_gravado;
 
 	// Receive
-	char server_response[256];
-	recv(network_socket, &server_response, sizeof(server_response), 0);
+	int total_recebido;
+	char server_response[5];
+	/*while (recv(network_socket, &server_response, 5, 0) > 0){
+		// Print server response
+		int i;
+		for (i=0; i<5; i++){
+			printf("Data received: %c \n", server_response[i]);
+		}
+		total_gravado = fwrite(server_response, 1, 5, arq);
+		memset(server_response, 0, 5);
+		if (total_gravado != 5){
+			printf("Erro na escrita do arquivo");
+			exit(1);
+		}
+		
+	}*/
+	do {
+		total_recebido = recv(network_socket, &server_response, 5, 0);
+		printf("Total recebido: %d\n", total_recebido);
+		// Print server response
+		int i;
+		for (i=0; i<5; i++){
+			printf("Data received: %c \n", server_response[i]);
+		}
+		total_gravado = fwrite(server_response, 1, total_recebido, arq);
+		memset(server_response, 0, 5);
+		if (total_gravado != total_recebido){
+			printf("Erro na escrita do arquivo");
+			exit(1);
+		}
+		
+	} while(total_recebido > 0);
 	
-	// Print server response
-	printf("Data received: %s \n", server_response);
 
-	//Close the connection
+	// Close the connection
 	close(network_socket);
+	
+	// Close file
+	fclose(arq);
 
-	//Free pointers
+	// Free pointers
 	free(nome_do_servidor);
 	free(nome_do_arquivo);
 	
