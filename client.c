@@ -75,7 +75,7 @@ int main(int argc, char **argv){
 	
 	// Open file
 	FILE *arq;
-	arq = fopen("Client_made.jpeg", "w+");
+	arq = fopen(nome_do_arquivo, "w+");
 	if (arq == NULL){
 		printf("Problemas na criacao do arquivo");
 		exit(1);	
