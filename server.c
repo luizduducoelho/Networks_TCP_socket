@@ -20,6 +20,7 @@ int main(int argc, char * argv[]){
 	int tam_buffer = atoi(argv[2]);
 	//char server_message[256] = "You have reached the server!";
 	
+	
 	// Create socket
 	int server_socket;
 	server_socket = socket(AF_INET, SOCK_STREAM, 0); // 0 is default, TCP

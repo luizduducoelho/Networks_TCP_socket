@@ -6,21 +6,18 @@
 #include <netinet/in.h>
 #include <string.h>
 
+void error(const char *msg){
+	perror(msg);
+	exit(1);
+}
+
+
 int main(int argc, char **argv){
 		if(argc < 5){	
 		fprintf(stderr , "Parametros faltando");
 		exit(1);
 	}
-	
-	// Process command line input
-	// Program receives
-	/*
-	int i = 0;
-	for (i = 0; i < argc; i++){
-		printf("argv[%d] = %s\n", i, argv[i]);
-	}
-	*/
-	
+
 	size_t host_len = strlen(argv[1]) + 1;  //Already counting 0 terminating in string
 	size_t filename_len = strlen(argv[3]) + 1;
 	
@@ -49,6 +46,10 @@ int main(int argc, char **argv){
 	printf("Nome do arquivo: %s\n", nome_do_arquivo);
 	printf("Tamanho do buffer: %d\n", tam_buffer);
 
+	//cria estruturas para a funcao gettimeofday
+	struct timeval t1;
+	struct timeval t2;
+	gettimeofday(&t1, NULL);
 	// Create socket
 	int network_socket;
 	network_socket = socket(AF_INET, SOCK_STREAM, 0); // 0 is default, TCP
@@ -85,20 +86,7 @@ int main(int argc, char **argv){
 	// Receive
 	int total_recebido;
 	char server_response[tam_buffer];
-	/*while (recv(network_socket, &server_response, 5, 0) > 0){
-		// Print server response
-		int i;
-		for (i=0; i<5; i++){
-			printf("Data received: %c \n", server_response[i]);
-		}
-		total_gravado = fwrite(server_response, 1, 5, arq);
-		memset(server_response, 0, 5);
-		if (total_gravado != 5){
-			printf("Erro na escrita do arquivo");
-			exit(1);
-		}
-		
-	}*/
+
 	int tam_arquivo = 0;
 	do {
 		total_recebido = recv(network_socket, &server_response, tam_buffer, 0);
@@ -117,8 +105,6 @@ int main(int argc, char **argv){
 		}
 		
 	} while(total_recebido > 0);
-	printf("Tamanho do arquivo: %dB", tam_arquivo);
-	
 
 	// Close the connection
 	close(network_socket);
@@ -129,6 +115,12 @@ int main(int argc, char **argv){
 	// Free pointers
 	free(nome_do_servidor);
 	free(nome_do_arquivo);
+	gettimeofday(&t2, NULL);
+	//calcula o tempo em ms
+	double tempoGasto = (t2.tv_usec - t1.tv_usec)/1000;
+	double taxa = tam_arquivo/tempoGasto;
+
+	printf("Tamanho do arquivo: %dB\nTempo gasto:%fms\nTaxa de transferencia: %fkbps", tam_arquivo, tempoGasto, taxa);
 	
 	return 0;
 }
