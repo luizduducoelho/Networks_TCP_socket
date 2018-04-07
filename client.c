@@ -91,7 +91,7 @@ int main(int argc, char **argv){
 	do {
 		total_recebido = recv(network_socket, &server_response, tam_buffer, 0);
 		tam_arquivo += total_recebido;
-		printf("Total recebido: %d\n", total_recebido);
+		//printf("Total recebido: %d\n", total_recebido);
 		// Print server response
 		/*
 		int i;
