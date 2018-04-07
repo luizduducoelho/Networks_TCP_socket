@@ -74,6 +74,7 @@ int main(int argc, char * argv[]){
 	}*/
 	do {	
 		total_lido = fread(buffer, 1, tam_buffer, arq);
+		/* Checking buffer content
 		printf("Buffer read 0: %c\n", buffer[0]);
 		printf("Buffer read 1: %c\n", buffer[1]);
 		printf("Buffer read 2: %c\n", buffer[2]);
@@ -81,6 +82,7 @@ int main(int argc, char * argv[]){
 		printf("Buffer read 4: %c\n", buffer[4]);
 		send(client_socket, buffer, total_lido, 0);
 		printf("Enviado: %d \n", total_lido);
+		*/
 		memset(buffer, 0, tam_buffer );
 	} while(total_lido != 0);
 	//send(client_socket, buffer, tam_buffer, 0);

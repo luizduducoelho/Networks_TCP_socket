@@ -37,7 +37,7 @@ int main(int argc, char **argv){
 		fprintf (stderr, "error: virtual memory exhausted allocating 'nome_do_arquivo'\n");
 		return 1;
     	}
-	strncpy (nome_do_arquivo, argv[3], filename_len);
+	strncpy (nome_do_arquivo, argv[3], filename_len-1);
 	
 	porta_do_servidor = atoi(argv[2]);
 
@@ -93,10 +93,12 @@ int main(int argc, char **argv){
 		tam_arquivo += total_recebido;
 		printf("Total recebido: %d\n", total_recebido);
 		// Print server response
+		/*
 		int i;
 		for (i=0; i<5; i++){
 			printf("Data received: %c \n", server_response[i]);
 		}
+		*/
 		total_gravado = fwrite(server_response, 1, total_recebido, arq);
 		memset(server_response, 0, tam_buffer);
 		if (total_gravado != total_recebido){
@@ -116,11 +118,12 @@ int main(int argc, char **argv){
 	free(nome_do_servidor);
 	free(nome_do_arquivo);
 	gettimeofday(&t2, NULL);
+
 	//calcula o tempo em ms
 	double tempoGasto = (t2.tv_usec - t1.tv_usec)/1000;
 	double taxa = tam_arquivo/tempoGasto;
 
-	printf("Tamanho do arquivo: %dB\nTempo gasto:%fms\nTaxa de transferencia: %fkbps", tam_arquivo, tempoGasto, taxa);
+	printf("Tamanho do arquivo: %dB\nTempo gasto:%fms\nTaxa de transferencia: %fkbps \n", tam_arquivo, tempoGasto, taxa);
 	
 	return 0;
 }
