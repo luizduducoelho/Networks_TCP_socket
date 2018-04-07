@@ -21,6 +21,7 @@ int main(int argc, char **argv){
 	size_t host_len = strlen(argv[1]) + 1;  //Already counting 0 terminating in string
 	size_t filename_len = strlen(argv[3]) + 1;
 	
+	// Allocating memory for parameter variables
 	char *nome_do_servidor = calloc(host_len, sizeof (*nome_do_servidor));
 	int porta_do_servidor;
 	char *nome_do_arquivo = calloc(filename_len, sizeof (*nome_do_arquivo));
@@ -40,16 +41,18 @@ int main(int argc, char **argv){
 	strncpy (nome_do_arquivo, argv[3], filename_len-1);
 	
 	porta_do_servidor = atoi(argv[2]);
-
+	
+	// Printing parameters read from command line
 	printf("Nome do servidor: %s\n", nome_do_servidor);
 	printf("Porta do servidor: %d\n", porta_do_servidor);
 	printf("Nome do arquivo: %s\n", nome_do_arquivo);
 	printf("Tamanho do buffer: %d\n", tam_buffer);
 
-	//cria estruturas para a funcao gettimeofday
+	// Create data structures for funcion gettimeofday
 	struct timeval t1;
 	struct timeval t2;
 	gettimeofday(&t1, NULL);
+
 	// Create socket
 	int network_socket;
 	network_socket = socket(AF_INET, SOCK_STREAM, 0); // 0 is default, TCP
@@ -57,7 +60,6 @@ int main(int argc, char **argv){
 		error("Falha ao criar socket");
 	}
 
-	
 	// Get address
 	struct sockaddr_in server_address;
 	server_address.sin_family = AF_INET;
@@ -105,7 +107,6 @@ int main(int argc, char **argv){
 			printf("Erro na escrita do arquivo");
 			exit(1);
 		}
-		
 	} while(total_recebido > 0);
 
 	// Close the connection
@@ -119,7 +120,7 @@ int main(int argc, char **argv){
 	free(nome_do_arquivo);
 	gettimeofday(&t2, NULL);
 
-	//calcula o tempo em ms
+	// Calculate time in ms
 	double tempoGasto = (t2.tv_usec - t1.tv_usec)/1000;
 	double taxa = tam_arquivo/tempoGasto;
 
