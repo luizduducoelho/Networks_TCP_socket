@@ -63,33 +63,14 @@ int main(int argc, char * argv[]){
 	}
 	int total_lido; 
 	char buffer[tam_buffer];
-	//total_lido = fread(buffer, 1, tam_buffer, arq);
-	/*while (fread(buffer, 1, tam_buffer, arq) == 5){
-		printf("Buffer read 0: %c\n", buffer[0]);
-		printf("Buffer read 1: %c\n", buffer[1]);
-		printf("Buffer read 2: %c\n", buffer[2]);
-		printf("Buffer read 3: %c\n", buffer[3]);
-		printf("Buffer read 4: %c\n", buffer[4]);
-		send(client_socket, buffer, tam_buffer, 0);
-	}*/
+	
+	// Send data
 	do {	
 		total_lido = fread(buffer, 1, tam_buffer, arq);
-		/* Checking buffer content
-		printf("Buffer read 0: %c\n", buffer[0]);
-		printf("Buffer read 1: %c\n", buffer[1]);
-		printf("Buffer read 2: %c\n", buffer[2]);
-		printf("Buffer read 3: %c\n", buffer[3]);
-		printf("Buffer read 4: %c\n", buffer[4]);
-		*/
 		send(client_socket, buffer, total_lido, 0);
 		//printf("Enviado: %d \n", total_lido);
 		memset(buffer, 0, tam_buffer );
 	} while(total_lido != 0);
-	//send(client_socket, buffer, tam_buffer, 0);
-	
-	
-	// Send data
-	//send(client_socket, server_message, sizeof(server_message), 0);
 	
 	// Close socket 
 	close(server_socket);
