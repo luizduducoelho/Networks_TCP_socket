@@ -72,7 +72,7 @@ int main(int argc, char **argv){
 		error("Falha de conexao");
 	}
 	
-	// Send request
+	// Send file name
 	send(network_socket, nome_do_arquivo, filename_len, 0);	
 	printf("Sent request to server\n");
 	

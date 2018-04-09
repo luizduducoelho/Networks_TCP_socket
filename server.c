@@ -70,6 +70,7 @@ int main(int argc, char * argv[]){
 		send(client_socket, buffer, total_lido, 0);
 		//printf("Enviado: %d \n", total_lido);
 		memset(buffer, 0, tam_buffer );
+		printf("Enviado um buffer \n");
 	} while(total_lido != 0);
 	
 	// Close socket 
